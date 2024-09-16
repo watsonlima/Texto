@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatador de Texto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: Courier, monospace;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Formatador de Texto (70 caracteres por linha)</h1>
+<p>Cole seu texto no campo abaixo e pressione o botão para formatar:</p>
+
+<textarea id="inputText" placeholder="Cole seu texto aqui..."></textarea>
+<br>
+<button onclick="formatText()">Formatar Texto</button>
+
+<h2>Texto Formatado:</h2>
+<pre id="outputText"></pre>
+
+<script>
+function removeAccents(text) {
+    const accentsMap = {
+        'Á': 'A', 'À': 'A', 'Ã': 'A', 'Â': 'A', 'É': 'E', 'Ê': 'E', 'Í': 'I', 'Ó': 'O', 'Ô': 'O', 'Õ': 'O', 'Ú': 'U', 'Ç': 'C',
+        'á': 'a', 'à': 'a', 'ã': 'a', 'â': 'a', 'é': 'e', 'ê': 'e', 'í': 'i', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ú': 'u', 'ç': 'c'
+    };
+    return text.replace(/[ÁÀÃÂÉÊÍÓÔÕÚÇáàãâéêíóôõúç]/g, match => accentsMap[match]);
+}
+
+function formatText() {
+    let input = document.getElementById('inputText').value;
+    input = removeAccents(input).toUpperCase();  // Remove acentos e converte para caixa alta
+    const maxLineLength = 70;
+    let output = '';
+    let currentLine = '';
+    
+    const paragraphs = input.split('\n'); // Divide o texto em parágrafos
+
+    paragraphs.forEach(paragraph => {
+        currentLine = '';
+
+        for (let i = 0; i < paragraph.length; i++) {
+            currentLine += paragraph[i];
+            
+            if (currentLine.length >= maxLineLength) {
+                output += currentLine + '\n';  // Adiciona quebra de linha após 70 caracteres
+                currentLine = '';  // Reinicia a linha atual
+            }
+        }
+
+        if (currentLine.length > 0) {
+            output += currentLine;  // Adiciona a última linha, se houver
+        }
+
+        output += '\n';  // Adiciona quebra de parágrafo
+    });
+
+    document.getElementById('outputText').innerText = output;
+}
+</script>
+
+</body>
+</html>
